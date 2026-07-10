@@ -14,6 +14,13 @@
   <meta name="apple-mobile-web-app-title" content="Sổ chi tiêu">
   <meta name="theme-color" content="#7c5cff">
 
+  <!-- Kết nối trước tới Google (DNS + SSL handshake) ngay khi mở trang,
+       để lúc bấm nút "Mở sổ chi tiêu" đỡ mất thời gian bắt tay kết nối -->
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="dns-prefetch" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com">
+  <link rel="dns-prefetch" href="https://script.googleusercontent.com">
+
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body {
@@ -154,6 +161,11 @@
   <script>
     // ⚠️ THAY LINK BÊN DƯỚI BẰNG LINK APP CỦA BẠN (kết thúc bằng /exec)
     const APP_URL = "https://script.google.com/macros/s/AKfycbwl_Us1wAr3uhfE6WSzpHOwWPA-JldoNo1tyWLN52umcBM6MZ6Uxuq3E5D0Abz557gz/exec";
+
+    // Âm thầm "đánh thức" Google Script ngay khi vừa mở màn hình chờ,
+    // để lúc bấm nút thì server đã khởi động sẵn, đỡ chờ lâu.
+    // mode: 'no-cors' để trình duyệt không chặn vì khác domain (không cần đọc kết quả, chỉ cần gọi tới).
+    fetch(APP_URL, { mode: 'no-cors' }).catch(function () {});
 
     function openApp() {
       const btn = document.getElementById('openBtn');
