@@ -120,11 +120,7 @@
       color: #9b8fd6;
     }
 
-    /* ---------- APP THẬT (iframe) ---------- */
-    #appFrame {
-      width: 100vw; height: 100vh; border: none; display: block;
-      position: fixed; inset: 0; z-index: 1;
-    }
+    /* ---------- APP THẬT ---------- */
   </style>
 </head>
 <body>
@@ -155,28 +151,16 @@
     </div>
   </div>
 
-  <!-- App thật load vào đây khi bấm nút -->
-  <iframe id="appFrame" style="display:none;"></iframe>
-
   <script>
     // ⚠️ THAY LINK BÊN DƯỚI BẰNG LINK APP CỦA BẠN (kết thúc bằng /exec)
     const APP_URL = "https://script.google.com/macros/s/AKfycbwl_Us1wAr3uhfE6WSzpHOwWPA-JldoNo1tyWLN52umcBM6MZ6Uxuq3E5D0Abz557gz/exec";
 
     function openApp() {
       const btn = document.getElementById('openBtn');
-      const splash = document.getElementById('splash');
-      const frame = document.getElementById('appFrame');
-
       btn.classList.add('loading');
       btn.innerText = 'Đang mở...';
-
-      frame.src = APP_URL;
-      frame.style.display = 'block';
-
-      frame.onload = function () {
-        splash.classList.add('hide');
-        setTimeout(function () { splash.style.display = 'none'; }, 400);
-      };
+      // Chuyển thẳng sang trang app (Google chặn nhúng Apps Script vào iframe nên không dùng iframe được)
+      window.location.href = APP_URL;
     }
   </script>
 </body>
