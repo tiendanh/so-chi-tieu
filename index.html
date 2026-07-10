@@ -2,40 +2,183 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <title>Sổ chi tiêu</title>
 
+  <!-- Icon cho PWA / Add to Home Screen -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Sổ chi tiêu">
-  <meta name="theme-color" content="#1a73e8">
+  <meta name="theme-color" content="#7c5cff">
 
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body {
-      margin: 0; padding: 0; height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Segoe UI', Arial, sans-serif; background: #fafafa;
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      font-family: 'Segoe UI', system-ui, Arial, sans-serif;
     }
-    .wrap { text-align: center; padding: 24px; }
-    img.icon { width: 110px; height: 110px; margin-bottom: 18px; }
-    h1 { color: #1a73e8; font-size: 22px; margin: 0 0 24px; }
-    a.btn {
+
+    /* ---------- MÀN HÌNH CHỜ ---------- */
+    #splash {
+      position: fixed; inset: 0;
+      background: linear-gradient(160deg, #f3f0ff 0%, #ece5ff 55%, #efeaff 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      overflow: hidden;
+      z-index: 10;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    #splash.hide { opacity: 0; transform: scale(1.03); pointer-events: none; }
+
+    .blob {
+      position: absolute; border-radius: 50%;
+      background: rgba(124, 92, 255, 0.14);
+    }
+    .blob1 { width: 260px; height: 260px; top: -90px; left: -90px; }
+    .blob2 { width: 220px; height: 220px; bottom: -80px; right: -80px; }
+    .blob3 { width: 140px; height: 140px; bottom: 40px; left: -60px; background: rgba(124,92,255,0.10);}
+    .dot { position: absolute; border-radius: 50%; background: rgba(124,92,255,0.35); }
+    .dot1 { width: 10px; height: 10px; top: 18%; right: 14%; }
+    .dot2 { width: 8px; height: 8px; bottom: 22%; left: 12%; }
+    .spark { position: absolute; font-size: 20px; color: #b8a6ff; opacity: .8; }
+    .spark1 { top: 15%; left: 18%; }
+    .spark2 { top: 32%; right: 12%; font-size: 16px; }
+
+    .splash-inner {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center;
+      width: 100%; max-width: 380px; padding: 0 32px;
+      text-align: center;
+    }
+
+    .wallet-wrap { margin-bottom: 22px; }
+    .wallet-emoji {
+      width: 150px;
+      filter: drop-shadow(0 10px 18px rgba(124,92,255,0.35));
       display: inline-block;
-      background: #1a73e8; color: white; text-decoration: none;
-      font-weight: 600; font-size: 16px;
-      padding: 14px 32px; border-radius: 8px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .app-title {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #5b3df0;
+      margin: 0 0 26px;
+      text-transform: uppercase;
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; margin: 22px 0;
+    }
+    .divider .line { flex: 1; height: 1px; background: rgba(124,92,255,0.25); }
+    .divider .center-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(124,92,255,0.45); }
+
+    .book-badge {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(124,92,255,0.14);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .book-badge img { width: 34px; }
+
+    .deco-icon { position: absolute; opacity: .9; }
+    .deco-heart { width: 26px; top: 40%; right: 16%; opacity: .35; }
+    .deco-sparkle-1 { width: 26px; top: 17%; left: 14%; }
+    .deco-sparkle-2 { width: 20px; top: 34%; right: 10%; }
+    .deco-leaf-1 { width: 60px; bottom: 8%; left: 4%; opacity: .5; transform: rotate(-15deg); }
+    .deco-leaf-2 { width: 60px; top: 6%; right: 2%; opacity: .5; transform: rotate(160deg) scaleX(-1); }
+    .deco-bubbles { width: 50px; bottom: 6%; right: 6%; opacity: .55; }
+
+    #openBtn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #7c5cff, #5b3df0);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(91,61,240,0.35);
+    }
+    #openBtn:active { transform: translateY(1px); }
+    #openBtn.loading { opacity: .75; }
+
+    .hint {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #9b8fd6;
+    }
+
+    /* ---------- APP THẬT (iframe) ---------- */
+    #appFrame {
+      width: 100vw; height: 100vh; border: none; display: block;
+      position: fixed; inset: 0; z-index: 1;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <img class="icon" src="icon-192.png" alt="Sổ chi tiêu">
-    <h1>💰 Sổ chi tiêu</h1>
-    <a class="btn" href="https://script.google.com/macros/s/AKfycbwl_Us1wAr3uhfE6WSzpHOwWPA-JldoNo1tyWLN52umcBM6MZ6Uxuq3E5D0Abz557gz/exec">Mở Sổ chi tiêu</a>
+
+  <!-- Màn hình chờ đẹp, hiện trước -->
+  <div id="splash">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+    <div class="dot dot1"></div>
+    <div class="dot dot2"></div>
+
+    <img src="icon_sparkle.png" class="deco-icon deco-sparkle-1" alt="">
+    <img src="icon_leaf.png" class="deco-icon deco-leaf-1" alt="">
+    <img src="icon_leaf.png" class="deco-icon deco-leaf-2" alt="">
+    <img src="icon_bubbles.png" class="deco-icon deco-bubbles" alt="">
+
+    <div class="splash-inner">
+      <div class="wallet-wrap"><img src="icon_wallet.png" class="wallet-emoji" alt="Ví tiền"></div>
+      <img src="icon_heart.png" class="deco-icon deco-heart" alt="">
+      <h1 class="app-title">Sổ chi tiêu</h1>
+
+      <div class="divider"><div class="line"></div><div class="center-dot"></div><div class="line"></div></div>
+
+      <div class="book-badge"><img src="icon_book.png" alt="Sổ"></div>
+      <button id="openBtn" onclick="openApp()">Mở sổ chi tiêu</button>
+      <div class="hint">Lần đầu mở có thể mất vài giây</div>
+    </div>
   </div>
+
+  <!-- App thật load vào đây khi bấm nút -->
+  <iframe id="appFrame" style="display:none;"></iframe>
+
+  <script>
+    // ⚠️ THAY LINK BÊN DƯỚI BẰNG LINK APP CỦA BẠN (kết thúc bằng /exec)
+    const APP_URL = "https://script.google.com/macros/s/THAY_ID_CUA_BAN_VAO_DAY/exec";
+
+    function openApp() {
+      const btn = document.getElementById('openBtn');
+      const splash = document.getElementById('splash');
+      const frame = document.getElementById('appFrame');
+
+      btn.classList.add('loading');
+      btn.innerText = 'Đang mở...';
+
+      frame.src = APP_URL;
+      frame.style.display = 'block';
+
+      frame.onload = function () {
+        splash.classList.add('hide');
+        setTimeout(function () { splash.style.display = 'none'; }, 400);
+      };
+    }
+  </script>
 </body>
 </html>
+
