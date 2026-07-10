@@ -165,7 +165,6 @@
     // Âm thầm "đánh thức" Google Script ngay khi vừa mở màn hình chờ,
     // để lúc bấm nút thì server đã khởi động sẵn, đỡ chờ lâu.
     // mode: 'no-cors' để trình duyệt không chặn vì khác domain (không cần đọc kết quả, chỉ cần gọi tới).
-    fetch(APP_URL, { mode: 'no-cors' }).catch(function () {});
 
     function openApp() {
       const btn = document.getElementById('openBtn');
